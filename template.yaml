@@ -10,7 +10,8 @@ Globals:
     Runtime: go1.x
     Environment:
       Variables:
-        DatabaseTable: !Ref TemplateTable
+        REGION: us-east-1
+        DATABASE_TABLE: !Ref TemplateTable
   Api:
     TracingEnabled: True
 
