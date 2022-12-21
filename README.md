@@ -1,4 +1,4 @@
-# Accounts API
+# API Template
 
 ## Style Guide
 
