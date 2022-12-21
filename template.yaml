@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  accounts micro-service 
+
+Globals:
+  Function:
+    Timeout: 5
+    Tracing: Active
+    Runtime: go1.x
+    Environment:
+      Variables:
+        DatabaseTable: !Ref TemplateTable
+  Api:
+    TracingEnabled: True
+
+Resources:
+  Hello:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: handlers/hello/
+      Handler: main
+      Policies:
+        - DynamoDBCrudPolicy:
+            TableName: !Ref TemplateTable
+      Architectures:
+        - x86_64
+      Events:
+        CatchAll:
+          Type: Api
+          Properties:
+            Path: /v1/hello/{name}
+            Method: GET
+
+  TemplateTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: 'template-dev'
+      KeySchema:
+        - AttributeName: PK
+          KeyType: HASH
+        - AttributeName: SK
+          KeyType: RANGE
+      AttributeDefinitions:
+        - AttributeName: PK
+          AttributeType: S
+        - AttributeName: SK
+          AttributeType: S
+      BillingMode: PAY_PER_REQUEST
